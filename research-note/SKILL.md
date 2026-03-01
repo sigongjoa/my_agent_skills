@@ -119,17 +119,37 @@ PDF 생성 완료 후 사용자에게 묻습니다:
 > PDF가 생성되었습니다: `[경로]`
 > GitHub 이슈로도 올릴까요? (Y/n)
 
-**이슈 생성 선택 시:**
+**이슈 생성 선택 시 — PDF → Gist → 이슈 순서로 진행:**
+
+#### 6-1. Markdown 이슈 본문 준비
+
+Typst 내용을 Markdown으로 변환해서 변수로 준비하세요:
+- 섹션: `## 🔍 Background` 형식
+- 코드블록: ` ```lang ` 유지
+- 볼드: `**텍스트**`, 리스트: `- 항목`
+
+#### 6-2. PDF → Gist 업로드 + 이슈 본문 생성
+
+```bash
+python3 ~/.claude/skills/research-note/scripts/upload_to_gist.py \
+  --pdf [PDF파일경로] \
+  --title "[제목]" \
+  --pages 5 \
+  --content "[Markdown 본문]" \
+  --output /tmp/issue_body.md
+```
+
+완료 시 `/tmp/issue_body.md` 에 PDF 이미지가 임베드된 최종 본문이 생성됨.
+
+#### 6-3. GitHub 이슈 생성
 
 ```bash
 gh issue create \
-  --repo [git remote에서 추출한 owner/repo] \
+  --repo [owner/repo] \
   --title "[Research Note] [제목]" \
-  --body "$(cat [markdown변환내용])" \
+  --body "$(cat /tmp/issue_body.md)" \
   --label "research-note"
 ```
-
-GitHub 이슈용 Markdown body는 Typst 내용을 Markdown으로 변환해서 작성하세요.
 
 ### 중요 규칙
 
