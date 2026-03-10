@@ -1,0 +1,158 @@
+% ============================================================
+% Textbook Authoring System — Color Style Template
+% ============================================================
+
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{mdframed}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\tcbuselibrary{skins, breakable}
+
+% ── 색상 팔레트 ──────────────────────────────────────────────
+\definecolor{primary}{HTML}{1A3A5C}      % 진한 네이비 — H1
+\definecolor{secondary}{HTML}{2E7BAE}    % 미드 블루  — H2
+\definecolor{accent}{HTML}{3AAFA9}       % 틸       — H3
+\definecolor{highlight}{HTML}{F0F7FF}    % 연한 하늘 — 배경
+\definecolor{tableheader}{HTML}{1A3A5C}  % 테이블 헤더
+\definecolor{tablerowodd}{HTML}{F7FBFF}  % 테이블 홀수행
+\definecolor{tableroweven}{HTML}{FFFFFF} % 테이블 짝수행
+\definecolor{rulecolor}{HTML}{2E7BAE}    % 구분선
+\definecolor{boxbg}{HTML}{EFF9F8}        % 박스 배경 (틸 연하게)
+\definecolor{boxborder}{HTML}{3AAFA9}    % 박스 테두리
+\definecolor{warningbg}{HTML}{FFF8E7}    % 경고 박스 배경
+\definecolor{warningborder}{HTML}{F0A500}% 경고 박스 테두리
+\definecolor{codebg}{HTML}{F4F6F8}       % 코드 블록 배경
+\definecolor{linkcolor}{HTML}{2E7BAE}    % 링크 색상
+
+% ── 페이지 여백 ──────────────────────────────────────────────
+\geometry{
+  top=2.5cm, bottom=2.5cm,
+  left=2.8cm, right=2.8cm,
+  headheight=14pt
+}
+
+% ── 헤딩 스타일 (계층별 색상) ────────────────────────────────
+% H1: 진한 네이비, 굵게, 하단 구분선
+\titleformat{\section}
+  {\color{primary}\Large\bfseries}
+  {\color{primary}\thesection}{1em}{}
+  [\color{rulecolor}\titlerule]
+
+% H2: 미드 블루, 굵게
+\titleformat{\subsection}
+  {\color{secondary}\large\bfseries}
+  {\color{secondary}\thesubsection}{1em}{}
+
+% H3: 틸, 보통 굵기
+\titleformat{\subsubsection}
+  {\color{accent}\normalsize\bfseries}
+  {\color{accent}\thesubsubsection}{1em}{}
+
+% ── 헤더/푸터 ────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{secondary}\leftmark}
+\fancyhead[R]{\small\color{secondary}Textbook Authoring System}
+\fancyfoot[C]{\small\color{secondary}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\color{rulecolor}\hrule width\headwidth height\headrulewidth}
+
+% ── 테이블 스타일 ────────────────────────────────────────────
+\usepackage{array}
+\renewcommand{\arraystretch}{1.4}
+
+% 테이블 헤더 행 자동 색상 (longtable/tabular 공통)
+\usepackage{longtable}
+\AtBeginEnvironment{longtable}{%
+  \rowcolors{2}{tablerowodd}{tableroweven}
+}
+\AtBeginEnvironment{tabular}{%
+  \rowcolors{2}{tablerowodd}{tableroweven}
+}
+
+% ── 코드 블록 ────────────────────────────────────────────────
+\usepackage{fancyvrb}
+\usepackage{framed}
+
+% Shaded는 pandoc이 코드블록 있을 때만 정의하므로 조건부 처리
+\makeatletter
+\AtBeginDocument{%
+  \@ifundefined{Shaded}{%
+    \newenvironment{Shaded}{%
+      \begin{tcolorbox}[enhanced,colback=codebg,colframe=secondary!30,
+        boxrule=0.5pt,arc=4pt,left=6pt,right=6pt,top=4pt,bottom=4pt,breakable]
+    }{%
+      \end{tcolorbox}
+    }%
+  }{%
+    \renewenvironment{Shaded}{%
+      \begin{tcolorbox}[enhanced,colback=codebg,colframe=secondary!30,
+        boxrule=0.5pt,arc=4pt,left=6pt,right=6pt,top=4pt,bottom=4pt,breakable]
+    }{%
+      \end{tcolorbox}
+    }%
+  }%
+}
+\makeatother
+
+% ── 강조 박스 (blockquote → 틸 박스) ─────────────────────────
+\renewenvironment{quote}{%
+  \begin{tcolorbox}[
+    enhanced,
+    colback=boxbg,
+    colframe=boxborder,
+    boxrule=1.5pt,
+    leftrule=4pt,
+    arc=3pt,
+    left=8pt, right=6pt, top=4pt, bottom=4pt,
+    breakable
+  ]
+  \itshape
+}{%
+  \end{tcolorbox}
+}
+
+% ── 학습목표 박스 (문서 첫 번째 구분용) ─────────────────────
+\newenvironment{objectivebox}{%
+  \begin{tcolorbox}[
+    enhanced,
+    title={\bfseries 학습 목표},
+    colbacktitle=primary,
+    colframe=primary,
+    colback=highlight,
+    fonttitle=\color{white}\bfseries,
+    boxrule=1pt,
+    arc=4pt,
+    breakable
+  ]
+}{%
+  \end{tcolorbox}
+}
+
+% ── 하이퍼링크 색상 ──────────────────────────────────────────
+\hypersetup{
+  colorlinks=true,
+  linkcolor=secondary,
+  urlcolor=accent,
+  citecolor=secondary,
+  pdfborder={0 0 0}
+}
+
+% ── 수식 번호 색상 ───────────────────────────────────────────
+\makeatletter
+\renewcommand{\theequation}{\color{secondary}\arabic{equation}}
+\makeatother
+
+% ── 목차 스타일 ──────────────────────────────────────────────
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\color{primary}\bfseries}
+\renewcommand{\cftsubsecfont}{\color{secondary}}
+\renewcommand{\cftsubsubsecfont}{\color{accent}}
+\renewcommand{\cftsecpagefont}{\color{primary}\bfseries}
