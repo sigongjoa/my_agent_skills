@@ -1,21 +1,16 @@
-# My Agent Skills
+# my_agent_skills
 
-Claude Code 개인 스킬 모음.
+Claude Code agent skills 모음.
 
 ## 스킬 목록
 
-| 스킬 | 설명 |
-|------|------|
-| [research-note](./research-note/) | 디버깅/연구 과정을 표준 연구노트 형식으로 정리해 PDF + GitHub 이슈로 저장 |
+| 브랜치 | 스킬 | 설명 |
+|--------|------|------|
+| `feat/proof-workbook` | proof-workbook | 수학 증명 워크북 생성 + 컴파일 |
+| `feat/drive-sync` | drive-sync | Google Drive 업로드/다운로드 |
+| `feat/research-note` | research-note | 리서치 노트 작성 |
+| `feat/textbook-authoring` | textbook-authoring | 교과서 저작 |
 
 ## 설치 방법
 
-각 스킬 디렉토리의 README를 참고하세요.
-
-```bash
-# 스킬 파일 복사
-cp -r research-note ~/.claude/skills/
-
-# Typst 템플릿 복사
-cp templates/research-note.typ ~/.claude/templates/
-```
+각 브랜치에서 `.claude/commands/` 파일을 프로젝트에 복사하거나 `~/.claude/commands/`에 복사.
