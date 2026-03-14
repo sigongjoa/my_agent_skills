@@ -3,6 +3,8 @@
 class-log 데이터를 분석하여 학생의 약점 기반 수학 시험지를 생성합니다.
 강사 검토 → 승인 → Typst PDF 컴파일까지 자동화합니다.
 
+**이미지 자동 생성 포함**: 각 문제 생성 후 `/img-gen` 로직으로 이미지 필요 여부를 자동 판단하여 CeTZ 그래프/도형/트리/차트를 삽입합니다.
+
 ---
 
 ## 인수 파싱
@@ -94,6 +96,8 @@ class-log 데이터를 분석하여 학생의 약점 기반 수학 시험지를 
 
 ### 생성 시 각 문제에 반드시 포함할 메타정보
 
+문제를 생성한 직후, **이미지 필요 여부를 /img-gen 로직으로 자동 판단**하여 `image_type`과 `cetz_code`를 채웁니다.
+
 ```json
 {
   "번호": 1,
@@ -104,6 +108,8 @@ class-log 데이터를 분석하여 학생의 약점 기반 수학 시험지를 
   "보기": null,
   "정답": "-1",
   "풀이": "log₂8 = log₂2³ = 3, log₃(1/9) = log₃3⁻² = -2 → 3 + (-2) = 1... (틀린 풀이 예시 정정 포함)",
+  "image_type": "none",
+  "cetz_code": null,
   "약점근거": "2026-03-10 — 로그 개념 미숙 (understanding: 2)",
   "우선순위": "고",
   "예상정오": "틀릴 가능성 높음",
@@ -181,6 +187,48 @@ class-log 데이터를 분석하여 학생의 약점 기반 수학 시험지를 
 ---
 
 ## STEP 6 — Typst 시험지 생성
+
+### 이미지 삽입 규칙
+
+각 문제의 `image_type`이 `"none"`이 아닌 경우, 문제 본문 아래에 CeTZ 코드를 삽입합니다.
+
+```typst
+// 이미지 있는 문제 블록 예시
+#prob(3, "12점", score_high, [
+  다음 그림은 함수 $f(x) = x^2 - 2x$의 그래프이다.
+  그래프를 참고하여 $f(x)$의 최솟값을 구하여라.
+
+  #v(0.3em)
+  #align(center)[
+    #import "@preview/cetz:0.4.2"
+    #import "@preview/cetz-plot:0.1.3": plot
+    #cetz.canvas(length: 1cm, {
+      import cetz.draw: *
+      plot.plot(
+        size: (5, 3.5),
+        x-min: -1, x-max: 3,
+        y-min: -2, y-max: 4,
+        x-tick-step: 1, y-tick-step: 1,
+        x-label: $x$, y-label: $y$,
+        x-grid: true, y-grid: true,
+        {
+          plot.add(x => x * x - 2 * x, domain: (-0.8, 2.8),
+            style: (stroke: rgb("#2980b9") + 1.5pt), samples: 60)
+          plot.add(((1, -1),), mark: "o", mark-size: 0.12,
+            style: (stroke: none, fill: rgb("#e74c3c")))
+        }
+      )
+    })
+  ]
+  #v(0.3em)
+], 2em)
+```
+
+**이미지 크기 기준 (2단 레이아웃):**
+- 함수 그래프: `size: (5, 3.5)` 또는 `(5, 4)`
+- 도형: canvas `length: 1cm`, 총 너비 5cm 이내
+- 확률 트리: 단계 수에 따라 `h-gap` 조정
+- 히스토그램: `size: (5.5, 3.5)`
 
 ### 파일 경로
 - 시험지: `class-log/data/tests/[학생명]_[생성날짜]_시험지.typ`
